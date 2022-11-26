@@ -10,11 +10,11 @@
 
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi import FastAPI
+from pydantic import BaseModel
 
-from routes import router
-
-# Criação do app
-app = FastAPI()
-
-app.include_router(router, prefix="")
+# Class Definition:
+class Papel(BaseModel):
+    id: int
+    nome: str
+    sigla: str
+    cnpj: str

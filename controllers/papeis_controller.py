@@ -7,14 +7,24 @@
 # \*==========================================================*/
 
 # Link do Github: https://github.com/ThiagoPiovesan
-
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi import FastAPI
+from fastapi import APIRouter
 
-from routes import router
+from models.papel import Papel
 
-# Criação do app
-app = FastAPI()
+router = APIRouter()
 
-app.include_router(router, prefix="")
+# fake database
+banco_de_dados = []
+
+# Endpoint to create the item
+@router.post("/")
+def add_item(item: Papel):
+    banco_de_dados.append(item)
+    return item
+
+# Endpoint to get all the objects added on database
+@router.get("/")
+def list_item():
+    return banco_de_dados

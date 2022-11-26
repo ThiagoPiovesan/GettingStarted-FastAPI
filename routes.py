@@ -10,11 +10,10 @@
 
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi import FastAPI
+from fastapi import APIRouter
 
-from routes import router
+from controllers import papeis_controller as papeis
 
-# Criação do app
-app = FastAPI()
+router = APIRouter()
 
-app.include_router(router, prefix="")
+router.include_router(papeis.router, prefix='/papeis')
