@@ -1,6 +1,6 @@
 ## An introduction to FastAPI Framework
 
-→ This repository is an compile and commented edition from the youtube [videos seris](https://youtube.com/playlist?list=PLstjCH2DwkBnKO9PdHc5NO1JOwbJdcq22).
+→ This repository is an compile and commented edition from the youtube [video serie](https://youtube.com/playlist?list=PLstjCH2DwkBnKO9PdHc5NO1JOwbJdcq22).
 
 **FastAPI Website**: https://fastapi.tiangolo.com
 
@@ -64,7 +64,7 @@ uvicorn main:app --reload
 - **Option 2**
     - 👯 Clone this repo: 
     ```
-    $ git clone https://github.com/ThiagoPiovesan/
+    $ git clone https://github.com/ThiagoPiovesan/GettingStarted-FastAPI
     ```
 
 - **Enjoy it!**
