@@ -7,21 +7,17 @@
 # \*==========================================================*/
 
 # Link do Github: https://github.com/ThiagoPiovesan
+
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi import APIRouter
+import os
+import databases
+import sqlalchemy
 
-from models.papel import Papel
+# Setting database url
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///db.sqlite')
+TEST_DATABASE = os.getenv('TEST_DATABASE', 'false') in ('true', 'yes')
 
-router = APIRouter()
-
-# Endpoint to create the item
-@router.post("/")
-async def add_item(papel: Papel):
-    await papel.save()
-    return papel
-
-# Endpoint to get all the objects added on database
-@router.get("/")
-async def list_item():
-    return await Papel.objects.all()
+# force_rollback doesn't let me write the data to the database when I'm testing it
+database = databases.Database(DATABASE_URL, force_rollback=TEST_DATABASE) 
+metadata = sqlalchemy.MetaData()

@@ -7,21 +7,18 @@
 # \*==========================================================*/
 
 # Link do Github: https://github.com/ThiagoPiovesan
+
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi import APIRouter
+import sqlalchemy
 
+from config import DATABASE_URL, metadata
 from models.papel import Papel
 
-router = APIRouter()
-
-# Endpoint to create the item
-@router.post("/")
-async def add_item(papel: Papel):
-    await papel.save()
-    return papel
-
-# Endpoint to get all the objects added on database
-@router.get("/")
-async def list_item():
-    return await Papel.objects.all()
+def configurar_banco(database_url = DATABASE_URL):
+    engine = sqlalchemy.create_engine(database_url)
+    metadata.drop_all(engine)
+    metadata.create_all(engine)
+    
+if __name__ == '__main__':
+    configurar_banco()
