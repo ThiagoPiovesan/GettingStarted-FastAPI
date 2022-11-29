@@ -17,4 +17,8 @@ from routes import router
 # Criação do app
 app = FastAPI()
 
+@app.get("/")
+def get_root():
+    return {"mensagem": "API de Papeis"}
+
 app.include_router(router, prefix="")

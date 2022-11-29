@@ -11,6 +11,8 @@
 #==================================================================================================#
 # Bibliotecas utilizadas:
 import sqlalchemy
+from sqlalchemy import engine
+from databases.core import DatabaseURL
 
 from config import DATABASE_URL, metadata
 from models.papel import Papel

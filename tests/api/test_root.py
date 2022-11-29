@@ -10,18 +10,11 @@
 
 #==================================================================================================#
 # Bibliotecas utilizadas:
-import ormar
-from sqlalchemy.sql.expression import table
-from config import database, metadata
+from fastapi.testclient import TestClient
 
-# Class Definition:
-class Papel(ormar.Model):
-    class Meta:
-        metadata = metadata
-        database = database
-        tablename = "papeis"
+def test_get_root(client: TestClient) -> None:
+    response = client.get('/')
+    body = response.json()
     
-    id: int = ormar.Integer(primary_key=True)
-    nome: str = ormar.String(max_length=100)
-    sigla: str = ormar.String(max_length=10)
-    cnpj: str = ormar.String(max_length=20)
+    assert response.status_code == 200
+    assert body["mensagem"] == "API de Papeis"

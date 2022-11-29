@@ -10,18 +10,14 @@
 
 #==================================================================================================#
 # Bibliotecas utilizadas:
-import ormar
-from sqlalchemy.sql.expression import table
-from config import database, metadata
+from fastapi.testclient import TestClient
+from models.papel import Papel
+from tests.utils.papeis import create_papel_valido
 
-# Class Definition:
-class Papel(ormar.Model):
-    class Meta:
-        metadata = metadata
-        database = database
-        tablename = "papeis"
+def test_cria_papel(client: TestClient) -> None:
+    body = create_papel_valido()
+    response = client.post("/papeis/", json=body)
+    content = response.json()
     
-    id: int = ormar.Integer(primary_key=True)
-    nome: str = ormar.String(max_length=100)
-    sigla: str = ormar.String(max_length=10)
-    cnpj: str = ormar.String(max_length=20)
+    assert response.status_code == 200
+    assert content["cnpj"] == body["cnpj"]

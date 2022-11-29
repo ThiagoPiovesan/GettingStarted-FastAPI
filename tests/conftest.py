@@ -10,18 +10,24 @@
 
 #==================================================================================================#
 # Bibliotecas utilizadas:
-import ormar
-from sqlalchemy.sql.expression import table
-from config import database, metadata
+import os
+import pytest
 
-# Class Definition:
-class Papel(ormar.Model):
-    class Meta:
-        metadata = metadata
-        database = database
-        tablename = "papeis"
-    
-    id: int = ormar.Integer(primary_key=True)
-    nome: str = ormar.String(max_length=100)
-    sigla: str = ormar.String(max_length=10)
-    cnpj: str = ormar.String(max_length=20)
+from fastapi.testclient import TestClient
+from typing import Generator
+
+from main import app
+from cria_tabelas import configurar_banco
+
+# Enviroment variables:
+DATABASE_URL = 'sqlite:///testedb.sqlite'
+os.environ["DATABASE_URL"] = DATABASE_URL
+os.environ["TEST_DATABASE"] = 'true'
+#==================================================================================================#
+# Test Init
+@pytest.fixture(scope="function")
+def client() -> Generator:
+    configurar_banco(DATABASE_URL)
+    with TestClient(app) as c:
+        yield c         # return all possibilities
+        
