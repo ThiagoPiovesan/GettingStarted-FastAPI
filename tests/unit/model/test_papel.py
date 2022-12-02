@@ -10,21 +10,17 @@
 
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi.testclient import TestClient
-from models.papel import Papel
 from tests.utils.papeis import create_papel_valido, create_papel_invalido
+from models.papel import Papel
 
-def test_cria_papel(client: TestClient) -> None:
-    body = create_papel_valido()
-    response = client.post("/papeis/", json=body)
-    content = response.json()
+import pytest
+
+def test_cria_papel_valido() -> None:
+    atributos = create_papel_valido()
+    papel = Papel(**atributos)
     
-    assert response.status_code == 200
-    assert content["cnpj"] == body["cnpj"]
+def test_cria_papel_com_sigla_invalido() -> None:
+    with pytest.raises(ValueError, match="A sigla do papel é inválida"):
+        atributos = create_papel_invalido(['sigla'])
+        papel = Papel(**atributos)
     
-def test_cria_papel_com_sigla_invalida(client: TestClient) -> None:
-    body = create_papel_invalido(['sigla'])
-    response = client.post("/papeis/", json=body)
-    content = response.json()
-    
-    assert response.status_code == 422
