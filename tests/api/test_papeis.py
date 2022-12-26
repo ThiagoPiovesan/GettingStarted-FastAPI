@@ -117,3 +117,20 @@ def test_delete_papel_inexistente(client: TestClient) -> None:
     assert response.status_code == 404
     assert content["detail"] == "Entidade não encontrada!" 
     
+#-----------------------------------------------------------------------------
+# Test Get ALl
+
+def test_lista_todos_os_papeis(client: TestClient) -> None:
+    atributos = create_papel_valido()
+    papel = Papel(**atributos)
+    
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    #------
+    loop.run_until_complete(papel.save())
+    
+    response = client.get("/papeis/")
+    content = response.json()
+
+    assert response.status_code == 200
+    # assert len(content) == 1

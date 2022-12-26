@@ -7,24 +7,27 @@
 # \*==========================================================*/
 
 # Link do Github: https://github.com/ThiagoPiovesan
+
 #==================================================================================================#
 # Bibliotecas utilizadas:
-import ormar
-from functools import wraps
+import ormar 
+import datetime
+from typing import Optional
 
-from controllers.utils.entidade_nao_encontrada import entidade_nao_encontrada
+from config import database, metadata
+from models.papel import Papel
 
-def get_controller(modelo: ormar.Model, select_related=[]):
-    def inner(func):
-        @entidade_nao_encontrada
-        @wraps(func)
-        async def wrapper(id: int):
-            
-            consulta = modelo.objects
-            if len(select_related):
-                consulta = consulta.select_related(select_related)
-                
-            entidade = await modelo.objects.get(id=id)
-            return entidade
-        return wrapper
-    return inner
+class Cotacao(ormar.Model):
+    class Meta:
+        metadata = metadata
+        database = database
+        tablename = "cotacoes"
+        
+    id: int = ormar.Integer(primary_key=True)
+    valor: float = ormar.Float(minimum=0)
+    horario: datetime = ormar.DateTime(timezone=False)
+    
+    papel: Optional[Papel] = ormar.ForeignKey(
+        Papel,
+        skip_reverse = True # Não deixa criar automaticamente uma propriedade dentre de Papeis
+    )
