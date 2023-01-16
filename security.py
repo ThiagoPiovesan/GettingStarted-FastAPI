@@ -7,19 +7,16 @@
 # \*==========================================================*/
 
 # Link do Github: https://github.com/ThiagoPiovesan
-
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi import APIRouter
+from passlib.context import CryptContext
 
-from controllers import papeis_controller as papeis
-from controllers import cotacoes_controller as cotacoes
-from controllers import usuario_controller as usuario
+pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
-router = APIRouter()
 
-router.include_router(papeis.router, prefix='/papeis', tags=['Papeis'])
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
-router.include_router(cotacoes.router, prefix='/cotacoes', tags=['Cotacoes'])
 
-router.include_router(usuario.router, prefix='/usuarios', tags=['Usuario'])
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)

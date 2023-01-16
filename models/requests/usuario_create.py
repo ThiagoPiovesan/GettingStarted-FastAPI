@@ -7,19 +7,16 @@
 # \*==========================================================*/
 
 # Link do Github: https://github.com/ThiagoPiovesan
-
 #==================================================================================================#
 # Bibliotecas utilizadas:
-from fastapi import APIRouter
+from pydantic import BaseModel, Field, validator
+from security import get_password_hash
 
-from controllers import papeis_controller as papeis
-from controllers import cotacoes_controller as cotacoes
-from controllers import usuario_controller as usuario
+class UserCreateRequest(BaseModel):
+    nome: str
+    email: str
+    hash_password: str = Field(alias='password')
 
-router = APIRouter()
-
-router.include_router(papeis.router, prefix='/papeis', tags=['Papeis'])
-
-router.include_router(cotacoes.router, prefix='/cotacoes', tags=['Cotacoes'])
-
-router.include_router(usuario.router, prefix='/usuarios', tags=['Usuario'])
+    @validator('hash_password', pre=True)
+    def hash_the_password(cls, v):
+        return get_password_hash(v)
