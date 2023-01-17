@@ -10,7 +10,8 @@
 #==================================================================================================#
 # Bibliotecas utilizadas:
 from typing import List
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, Form, HTTPException
+from controllers.depends.usuario import get_usuario_logado
 from controllers.utils.delete_controller import delete_controller
 from controllers.utils.get_all_controller import get_all_controller
 from controllers.utils.get_controller import get_controller
@@ -20,6 +21,7 @@ from models.requests.usuario_create import UserCreateRequest
 from models.responses.usuario_response import UsuarioResponse
 
 from models.usuario import Usuario
+from security import criar_token_jwt, verify_password
 
 router = APIRouter()
 
@@ -36,7 +38,7 @@ async def list_item():
 
 @router.get("/{id}", response_model=UsuarioResponse)
 @get_controller(Usuario)
-async def get_papel(id: int):    
+async def get_papel(id: int, usuario_logado: Usuario = Depends(get_usuario_logado)):    
     pass
 
 @router.patch("/{id}", response_model=UsuarioResponse)
@@ -46,5 +48,16 @@ async def patch_papel(propriedades_atualizacao: UsuarioUpdateRequest, id: int):
 
 @router.delete("/{id}")
 @delete_controller(Usuario)
-async def delete_papel(id: int):
+async def delete_papel(id: int, usuario_logado: Usuario = Depends(get_usuario_logado)):
     pass
+
+@router.post("/login")
+async def login(username: str = Form(...), password: str = Form(...)):
+    user = await Usuario.objects.get_or_none(email=username)
+    if not user or not verify_password(password, user.hash_password):
+        raise HTTPException(status_code=403,
+                            detail="Email ou nome de usuário incorretos")
+    return {
+        "access_token": criar_token_jwt(user.id),
+        "token_type": "bearer",
+    }

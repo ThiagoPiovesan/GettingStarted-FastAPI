@@ -18,7 +18,7 @@ def get_controller(modelo: ormar.Model, select_related=[]):
     def inner(func):
         @entidade_nao_encontrada
         @wraps(func)
-        async def wrapper(id: int):
+        async def wrapper(id: int, **kwargs):
             
             consulta = modelo.objects
             if len(select_related):
