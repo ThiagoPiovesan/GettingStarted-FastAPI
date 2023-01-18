@@ -10,8 +10,10 @@
 #==================================================================================================#
 # Bibliotecas utilizadas:
 from pydantic import BaseModel
+from typing import List
 
 class UsuarioResponse(BaseModel):
     id: int
     nome: str
     email: str
+    funcoes: List[str]
